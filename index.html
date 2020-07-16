@@ -14,7 +14,7 @@
   <script>
     // Facebook developers
     window.fbAsyncInit = function() {
-      console.log('init6')
+      console.log('init7')
       FB.init({
         appId: '276691543659838',
         xfbml: true,
@@ -52,6 +52,7 @@
 
       FB.ui({
         method: 'share_open_graph',
+        href: 'https://developers.facebook.com/docs/',
         action_type: 'og.likes',
         action_properties: JSON.stringify({
           object: shareObject
