@@ -47,11 +47,13 @@
         'og:image': shareImage
       }
 
+      console.log(shareObject)
+
 
       FB.ui({
         method: 'share_open_graph',
         action_type: 'og.shares',
-        // mobile_iframe: true,
+        mobile_iframe: true,
         action_properties: JSON.stringify({
           object: shareObject
         })
