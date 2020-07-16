@@ -14,13 +14,13 @@
   <script>
     // Facebook developers
     window.fbAsyncInit = function() {
-      console.log('init2')
+      console.log('init3')
       FB.init({
         appId: '276691543659838',
         xfbml: true,
         version: 'v2.5'
       })
-      // FB.AppEvents.logPageView()
+      FB.AppEvents.logPageView()
     }
 
     ;(function(d, s, id) {
@@ -53,6 +53,7 @@
       FB.ui({
         method: 'share_open_graph',
         action_type: 'og.shares',
+        mobile_iframe: true,
         mobile_iframe: true,
         action_properties: JSON.stringify({
           object: shareObject
