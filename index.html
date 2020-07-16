@@ -4,69 +4,107 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <style>
+    * {
+      position: relative;
+      padding: 0;
+      margin: 0;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+    }
+
+    #canvas1{
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+    }
+  </style>
 </head>
 <body>
   
-  <button class="btn" data-share-image="https://fakeimg.pl/120x63/282828/eae0d0/?retina=1" data-share-title="A title" data-share-desc="A description">fb 分享 A</button>
-  <button class="btn" data-share-image="https://fakeimg.pl/120x63/282828/eae0d0/?retina=1" data-share-title="B title" data-share-desc="B description">fb 分享 B</button>
-
-
+  <canvas id="canvas1"></canvas>
+  
   <script>
-    // Facebook developers
-    window.fbAsyncInit = function() {
-      console.log('init9')
-      FB.init({
-        appId: '276691543659838',
-        autoLogAppEvents : true,
-        xfbml: true,
-        version: 'v2.12'
-      })
-      FB.AppEvents.logPageView()
-    }
+    let canvas = document.getElementById('canvas1')
+    let ctx = canvas.getContext('2d')
+    let { innerWidth: ww, innerHeight: wh } = window
+    let tt = 0
+    let animateId = null
 
-    ;(function(d, s, id) {
-      let js,
-        fjs = d.getElementsByTagName(s)[0]
-      if (d.getElementById(id)) {
-        return
-      }
-      js = d.createElement(s)
-      js.id = id
-      js.src = 'https://connect.facebook.net/en_US/sdk.js'
-      fjs.parentNode.insertBefore(js, fjs)
-    })(document, 'script', 'facebook-jssdk')
-  </script>
+    const draw = () => {
+      tt++
+      
+      ctx.clearRect(0, 0, ww, wh)
+      ctx.fillStyle = '#000000'
+      ctx.fillRect(0, 0, ww, wh)
 
-  <script>
+      ctx.fillStyle = '#ffffff'
+      ctx.strokeStyle = '#ffffff'
+      ctx.lineWidth = 1
 
-    const clickHandler = (e) => {
-      const { shareTitle, shareDesc, shareImage } = e.target.dataset
-      const shareObject = {
-        'og:url': window.location.href,
-        'og:title': shareTitle,
-        'og:description': shareDesc,
-        'og:image': shareImage
+      ctx.beginPath()
+      ctx.save()
+      ctx.rotate(15 * Math.PI / 180);
+      ctx.translate(0, -120)
+
+      for (let x = 0; x < ww + 500; x++) {
+        let deg = x * (Math.PI / 180)
+        let ttt = tt / 20;
+        let y = 200 
+          + Math.sin( deg*2 + ttt ) * 4
+          + Math.sin( deg*3 + ttt ) * 3
+          + Math.sin( deg*2 + ttt ) * 4
+          + Math.sin( deg*3 + ttt ) * 3
+          + Math.sin( deg*2 + ttt ) * 4
+        ctx.lineTo(x, y)
       }
 
-      console.log(shareObject)
-
-
-      FB.ui({
-        method: 'share_open_graph',
-        name: 'name',
-        action_type: 'og.shares',
-        action_properties: JSON.stringify({
-          object: shareObject
-        })
-      }, function(res) {
-        console.log(res)
-      })
+      ctx.lineTo(ww + 500, 600)
+      
+      for (let x = ww + 500; x >= 0; x--) {        
+        let deg = x * (Math.PI / 180)
+        let ttt = tt / 15;
+        let y = 600 
+          + Math.sin( deg*2 + ttt ) * 4
+          + Math.sin( deg*3 + ttt ) * 3
+          + Math.sin( deg*2 + ttt ) * 4
+          + Math.sin( deg*3 + ttt ) * 3
+          + Math.sin( deg*2 + ttt ) * 4
+        
+        ctx.lineTo(x, y)
+      }
+      
+      ctx.fill();
+      ctx.restore()
+      
     }
 
-    document.querySelectorAll('.btn').forEach(el => {
-      el.addEventListener('click', clickHandler)
-    })
+    const animate = () => {
+      animateId = window.requestAnimationFrame(animate)
+      draw()
+    }
 
+    const resizeHandler = () => {      
+      canvas.width = ww = window.innerWidth
+      canvas.height = wh = window.innerHeight
+    }
+
+    window.onload = () => {
+      ww = window.innerWidth
+      wh = window.innerHeight
+
+      canvas.width = ww
+      canvas.height = wh
+      animate()
+    }
+
+    window.addEventListener('resize', resizeHandler)
 
   </script>
 
