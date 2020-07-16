@@ -6,6 +6,64 @@
   <title>Document</title>
 </head>
 <body>
-  kenchi test
+  
+  <button class="btn" data-share-image="https://fakeimg.pl/1200x630/282828/eae0d0/?retina=1" data-share-title="A title" data-share-desc="A description">fb 分享 A</button>
+  <button class="btn" data-share-image="https://fakeimg.pl/1200x630/282828/eae0d0/?retina=1" data-share-title="B title" data-share-desc="B description">fb 分享 B</button>
+
+
+  <script>
+    // Facebook developers
+    window.fbAsyncInit = function() {
+      console.log('init')
+      FB.init({
+        appId: '276691543659838',
+        // xfbml: true,
+        version: 'v7.0'
+      })
+      // FB.AppEvents.logPageView()
+    }
+
+    ;(function(d, s, id) {
+      let js,
+        fjs = d.getElementsByTagName(s)[0]
+      if (d.getElementById(id)) {
+        return
+      }
+      js = d.createElement(s)
+      js.id = id
+      js.src = 'https://connect.facebook.net/en_US/sdk.js'
+      fjs.parentNode.insertBefore(js, fjs)
+    })(document, 'script', 'facebook-jssdk')
+  </script>
+
+  <script>
+
+    const clickHandler = (e) => {
+      const { shareTitle, shareDesc, shareImage } = e.target.dataset
+      const shareObject = {
+        'og:url': window.location.href,
+        'og:title': shareTitle,
+        'og:description': shareDesc,
+        'og:image': shareImage
+      }
+
+
+      FB.ui({
+        method: 'share_open_graph',
+        action_type: 'og.shares',
+        // mobile_iframe: true,
+        action_properties: JSON.stringify({
+          object: shareObject
+        })
+      })
+    }
+
+    document.querySelectorAll('.btn').forEach(el => {
+      el.addEventListener('click', clickHandler)
+    })
+
+
+  </script>
+
 </body>
 </html>
