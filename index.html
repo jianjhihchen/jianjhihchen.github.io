@@ -19,7 +19,7 @@
         appId: '276691543659838',
         autoLogAppEvents : true,
         xfbml: true,
-        version: 'v2.5'
+        version: 'v2.12'
       })
       FB.AppEvents.logPageView()
     }
@@ -52,11 +52,9 @@
 
 
       FB.ui({
-        method: 'share',
+        method: 'share_open_graph',
         name: 'name',
-        picture: shareImage,
-        description: shareDesc,
-        action_type: 'og.likes',
+        action_type: 'og.shares',
         action_properties: JSON.stringify({
           object: shareObject
         })
