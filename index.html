@@ -52,9 +52,11 @@
 
 
       FB.ui({
-        method: 'share_open_graph',
+        method: 'feed',
+        name: 'name',
+        picture: shareImage,
+        description: shareDesc,
         action_type: 'og.likes',
-        quote: 'ssssss',
         action_properties: JSON.stringify({
           object: shareObject
         })
