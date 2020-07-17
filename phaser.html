@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>       
+    body {
+      margin: 0;
+      background-color: #000000;
+    }
+
+    canvas {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate3d(-50%, -50%, 0);
+    } 
+  </style>
+</head>
+<body>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.24.1/phaser.min.js"></script>
+  <script>
+    (function(){
+      const mainScene = {
+        key: 'SceneA',
+        preload() {
+          // 模擬背景
+          this.load.image('bg', 'assets/bg.png')
+
+          // 模擬相片
+          this.load.spritesheet('man', 'assets/man.png', {
+            frameWidth: 80,
+            frameHeight: 110
+          })
+        },
+        init() {
+          console.log('scene a init')
+        },
+        create() {
+          // 背景物件
+          this.bg = this.add.tileSprite(0, 0, 768, 1024, 'bg').setOrigin(0, 0)
+
+          // 相片物件
+          this.opacity = this.add.sprite(50, 225, 'man', 0)
+
+          // 相片動畫
+          this.opacity.alphaTween = this.tweens.add({
+            targets: this.opacity,
+            alpha: 0.8,
+            duration: 200,
+            yoyo: true,
+            repeat: -1
+          })
+
+          // 按鈕物件
+          this.text = this.add.text(350, 980, '我是按鈕', {
+            font: '24px Open Sans',
+            fill: '#000000'
+          }).setInteractive()
+
+          this.text.on('pointerdown', () => {
+            this.cameras.main.fadeOut(3000, 0)
+
+            this.cameras.main.once('camerafadeoutcomplete', (camera) => {
+              this.scene.switch('SceneB');
+            })
+        
+          })
+        },
+        update() {
+          this.bg.tilePositionY += 1
+        }
+      }
+
+      const SceneB = {
+        key: 'SceneB',
+        preload() {
+          
+        },
+        init() {
+          
+        },
+        create() {
+          this.text = this.add.text(0, 0, '今天是上學的第一天，\n你特別的早到，教室只有你一個人，\n趁現在偷偷自拍來紀念開學日，\nPO文時你會替自己添加以下哪些標籤？', {
+            lineSpacing: 10
+          })
+          this.text.alpha = 0
+          this.tweens.add({
+            targets: this.text,
+            alpha: 1,
+            duration: 200
+          })
+        }
+      }
+
+
+      let scene = new Phaser.Scene('Game')
+      let config = {
+        tpye: Phaser.AUTO,
+        width: 768,
+        height: 1024,
+        scene: [mainScene, SceneB]
+      }
+
+      let game = new Phaser.Game(config)
+
+
+      window.onload = function() {
+        const resize = () => {
+          let canvas = document.querySelector('canvas')
+          let ww = window.innerWidth
+          let wh = window.innerHeight
+          let wRatio = ww / wh
+          let gameRatio = config.width / config.height
+          if (wRatio < gameRatio) {
+            canvas.style.width = ww + 'px'
+            canvas.style.height = ww / gameRatio + 'px'
+          } else {
+            canvas.style.width = wh * gameRatio + 'px'
+            canvas.style.height = wh + 'px'
+          }
+        }
+        resize()
+        window.addEventListener('resize', resize, false)
+      }
+
+    })()
+  </script>
+  
+</body>
+</html>
