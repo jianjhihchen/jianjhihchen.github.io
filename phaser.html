@@ -61,7 +61,7 @@
           }).setInteractive()
 
           this.text.on('pointerdown', () => {
-            this.cameras.main.fadeOut(3000, 0)
+            this.cameras.main.fadeOut(1000, 0)
 
             this.cameras.main.once('camerafadeoutcomplete', (camera) => {
               this.scene.switch('SceneB');
@@ -77,10 +77,15 @@
       const SceneB = {
         key: 'SceneB',
         preload() {
-          
+          // 模擬按鈕
+          this.load.spritesheet('man', 'assets/man.png', {
+            frameWidth: 80,
+            frameHeight: 110
+          })
         },
         init() {
-          
+          this.answers = []
+          this.options = []
         },
         create() {
           this.text = this.add.text(0, 0, '今天是上學的第一天，\n你特別的早到，教室只有你一個人，\n趁現在偷偷自拍來紀念開學日，\nPO文時你會替自己添加以下哪些標籤？', {
@@ -92,6 +97,79 @@
             alpha: 1,
             duration: 200
           })
+
+
+          // 模擬填空
+          for (let i = 0; i < 3; i++) {
+            let text1 = this.add.text(0, 0, '#Answer')
+            let btn = this.add.image(0, 0, 'man')
+            const container = this.add.container((150 * i) + 150, 250, [btn, text1]) //.setInteractive(new Phaser.Geom.Circle(0, 0, 60), Phaser.Geom.Circle.Contains)
+            container.selfData = { answer: null }
+            // container.on('pointerdown', () => {
+            //   btn.setTint(0x44ff44);
+            // })
+
+            this.answers.push(container)
+
+            // let graphics = this.add.graphics()
+            // graphics.lineStyle(2, 0x00ffff, 1)
+            // graphics.strokeCircle(container.x, container.y, container.input.hitArea.radius)
+          }
+
+          // 模擬選項
+          for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 4; j++) {
+              let text1 = this.add.text(0, 0, `#Answer${i}${j}`)
+              let btn = this.add.image(0, 0, 'man')
+              const container = this.add.container((150 * i) + 150, (150 * j) + 450, [btn, text1]).setInteractive(new Phaser.Geom.Circle(0, 0, 60), Phaser.Geom.Circle.Contains)
+              container.selfData = { active: false}
+
+              container.on('pointerdown', () => {
+                if (container.selfData.active) {
+                  container.selfData.active = false
+                  btn.clearTint();
+
+                  // 清除答案
+                  let found = this.answers.find(el => el.selfData.answer === `#Answer${i}${j}`)
+                  if (found) {
+                    found.selfData.answer =  null
+                    found.list.forEach(item => {
+                      if(item.type === 'Text') {
+                        item.text = ''
+                      }
+                    })
+                  }
+
+                } else {
+                  if (this.answers.filter(el => el.selfData.answer !== null).length >= 3) return
+
+                  container.selfData.active = true
+                  btn.setTint(0x44ff44);
+
+                  // 更改答案
+                  let found = this.answers.find(el => el.selfData.answer === null)
+                  if (found) {
+                    found.selfData.answer =  `#Answer${i}${j}`
+                    found.list.forEach(item => {
+                      if(item.type === 'Text') {
+                        item.text = `#Answer${i}${j}`
+                      }
+                    })
+                  }
+                }
+              })
+
+              this.options.push(container)
+
+
+              let graphics = this.add.graphics()
+              graphics.lineStyle(2, 0x00ffff, 1)
+              graphics.strokeCircle(container.x, container.y, container.input.hitArea.radius)
+            }
+          }
+
+
+
         }
       }
 
