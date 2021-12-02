@@ -8,5 +8,18 @@
 </head>
 <body>
   recaptcha
+
+  <button
+    class="g-recaptcha"
+    data-sitekey="6LdSa3EdAAAAANnoecy_o41Y_zV-RM73f4dSOwQo"
+    data-action="verify-test"
+    data-callback="verifyCallback">送出</button>
+
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <script>
+    window.verifyCallback = (token) => {
+      console.log('!!!', token)
+    }
+  </script>
 </body>
 </html>
