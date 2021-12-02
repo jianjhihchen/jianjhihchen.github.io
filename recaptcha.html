@@ -9,16 +9,27 @@
 <body>
   recaptcha
 
-  <button
+  <div
     class="g-recaptcha"
-    data-sitekey="6LdSa3EdAAAAANnoecy_o41Y_zV-RM73f4dSOwQo"
-    data-action="verify-test"
-    data-callback="verifyCallback">送出</button>
+    data-sitekey="網站金鑰"
+    data-theme="light" data-size="normal"
+    data-callback="verify"
+    data-expired-callback="expired"
+    data-error-callback="error">
+  </div>
 
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
   <script>
-    window.verifyCallback = (token) => {
-      console.log('!!!', token)
+    window.verify = (token) => {
+      console.log('verify: ', token)
+    }
+
+    window.expired = (res) => {
+      console.log('expired: ', res)
+    }
+
+    window.error = (res) => {
+      console.log('error: ', res)
     }
   </script>
 </body>
